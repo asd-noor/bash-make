@@ -60,3 +60,14 @@ while true; do
 done
 
 clear
+
+if [[ "$cmdshist" != "" ]]; then
+    printf "\n%s invocation history\n" "$0"
+    # i=1
+    for word in $cmdshist; do
+        echo "    - $word"
+        # echo "    $i. $word"
+        # i=$((i+1))
+    done
+    printf "\n"
+fi
