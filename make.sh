@@ -48,17 +48,15 @@ while true; do
     _print_history
     read -r -n1 -p "Pick command (q to quit): " chosen
     printf "\n"
+    [[ "$chosen" = "q" ]] && break
 
-    if [[ "$chosen" = "q" ]]; then
-        break
-    elif [[ ${cmds[$chosen]+_} ]]; then
+    if [[ ${cmds[$chosen]+_} ]]; then
         ${cmds[$chosen]}
-    else
-        invalidopt="$chosen"
+        _append_hist "${cmds[$chosen]}"
         continue
     fi
 
-    _append_hist "${cmds[$chosen]}"
+    invalidopt="$chosen"
 done
 
 clear
