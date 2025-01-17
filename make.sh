@@ -6,12 +6,8 @@ declare -A cmds
 cmdshist=""
 invalidopt=""
 
-_clearscreen() {
-    clear
-    printf "\n%s (dir: %s)\n\n" "$0" "$PWD"
-}
-
 _print_cmds() {
+    printf "\n%s (dir: %s)\n\n" "$0" "$PWD"
     printf "Commands:\n"
     for i in "${!cmds[@]}"; do printf '    %s: %s\n' "$i" "${cmds[$i]}"; done
 }
@@ -44,7 +40,7 @@ push() {
 }
 
 while true; do
-    _clearscreen
+    clear
 
     cmds=([b]=build [p]=push)
     _print_cmds
@@ -53,14 +49,16 @@ while true; do
     read -r -n1 -p "Pick command (q to quit): " chosen
     printf "\n"
 
-    case "$chosen" in
-        b) build ;;
-        p) push ;;
-        q) break ;;
-        *) invalidopt="$chosen" ; continue ;;
-    esac
+    if [[ "$chosen" = "q" ]]; then
+        break
+    elif [[ ${cmds[$chosen]+_} ]]; then
+        ${cmds[$chosen]}
+    else
+        invalidopt="$chosen"
+        continue
+    fi
 
     _append_hist "${cmds[$chosen]}"
 done
 
-printf "\n"
+clear
