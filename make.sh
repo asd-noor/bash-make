@@ -25,6 +25,21 @@ _append_hist() {
     printf "\nPress any key to continue.."
     read -n1
 }
+
+_summary() {
+    clear
+
+    if [[ "$cmdshist" != "" ]]; then
+        printf "\n%s invocation history\n" "$0"
+        # i=1
+        for word in $cmdshist; do
+            echo "    - $word"
+            # echo "    $i. $word"
+            # i=$((i+1))
+        done
+        printf "\n"
+    fi
+}
 # }}}
 
 build() {
@@ -59,15 +74,4 @@ while true; do
     invalidopt="$chosen"
 done
 
-clear
-
-if [[ "$cmdshist" != "" ]]; then
-    printf "\n%s invocation history\n" "$0"
-    # i=1
-    for word in $cmdshist; do
-        echo "    - $word"
-        # echo "    $i. $word"
-        # i=$((i+1))
-    done
-    printf "\n"
-fi
+_summary
