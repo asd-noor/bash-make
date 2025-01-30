@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# vim: set filetype=bash foldmethod=marker foldlevel=0:
 
 build() {
     echo 'building'
@@ -88,3 +87,5 @@ done
 
 _summary
 # }}}
+
+# vim: set filetype=bash foldmethod=marker foldlevel=0:
