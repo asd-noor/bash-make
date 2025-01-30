@@ -1,19 +1,45 @@
 #!/usr/bin/env bash
 # vim: set filetype=bash foldmethod=marker foldlevel=0:
 
-# Helpers {{{
-declare -A cmds
+build() {
+    echo 'building'
+    sleep 2
+    echo 'finished'
+}
+
+push() {
+    echo 'pushing'
+    sleep 1
+    echo 'pushed'
+}
+
+debug() {
+    echo 'debugging'
+    sleep 3
+    echo 'debug finished'
+}
+
+declare -A cmds=([b]=build [p]=push [d]=debug)
+
+# App {{{
 cmdshist=""
 invalidopt=""
 
 _print_cmds() {
-    printf "\n%s (dir: %s)\n\n" "$0" "$PWD"
-    printf "Commands:\n"
-    for i in "${!cmds[@]}"; do printf '    %s: %s\n' "$i" "${cmds[$i]}"; done
+    printf "\n\e[1mInteractive Make\e[0m: (dir: %s)\n\n" "$PWD"
+    printf "\e[1mCommands\e[0m:\n"
+
+    local nl=0
+    for i in "${!cmds[@]}"; do
+        [[ $nl -eq 2 ]] && { printf "\n"; nl=0; }
+        local v="\e[33m$i\e[0m: ${cmds[$i]}"
+        printf "    \e[33m%s\e[0m: %-9s" "$i" "${cmds[$i]}"
+        nl=$((nl + 1))
+    done
 }
 
 _print_history() {
-    printf "\nHistory:%s\n" "$cmdshist"
+    printf "\n\nHistory:%s\n" "$cmdshist"
     [[ -z "$invalidopt" ]] || {
         printf "Invalid option: %s\n" "$invalidopt"
         invalidopt=""
@@ -40,27 +66,13 @@ _summary() {
         printf "\n"
     fi
 }
-# }}}
-
-build() {
-    echo 'building'
-    sleep 2
-    echo 'finished'
-}
-
-push() {
-    echo 'pushing'
-    sleep 1
-    echo 'pushed'
-}
 
 while true; do
     clear
 
-    cmds=([b]=build [p]=push)
     _print_cmds
-
     _print_history
+
     read -r -n1 -p "Pick command (q to quit): " chosen
     printf "\n"
     [[ "$chosen" = "q" ]] && break
@@ -75,3 +87,4 @@ while true; do
 done
 
 _summary
+# }}}
